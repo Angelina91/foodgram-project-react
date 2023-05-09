@@ -9,13 +9,13 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-=j%#=pc5l3l5b-s8vf!)$tl+_z#&4pr&iv6fuhxg04esnw*_9i')
+SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
 
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-#SECRET_KEY = 'django-insecure-=j%#=pc5l3l5b-s8vf!)$tl+_z#&4pr&iv6fuhxg04esnw*_9i'
+# SECRET_KEY = 'django-insecure-=j%#=pc5l3l5b-s8vf!)$tl+_z#&4pr&iv6fuhxg04esnw*_9i'
 
 # Application definition
 
@@ -26,6 +26,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users.apps.UsersConfig',
+    'posts.apps.PostsConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -40,9 +43,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'foodgram_progect.urls'
 
+#  TEMPLATES_DIR = BASE_DIR / '___' - уточнить для настройки front
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # 'DIRS': [TEMPLATES_DIR], - надо ли?
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -99,6 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'users.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -118,6 +125,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
