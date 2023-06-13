@@ -1,10 +1,10 @@
-from django_measurement.models import MeasurementField
-# from measurement.measures import Volume
-from measurement.measures import Weight
 from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
 # from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django_measurement.models import MeasurementField
+# from measurement.measures import Volume
+from measurement.measures import Weight
 
 User = get_user_model()
 
@@ -138,7 +138,7 @@ class IngredientDetale(models.Model):
 
     class Meta:
         verbose_name = 'Ингредиент для рецепта'
-        verbose_name_plural = 'Ингредиенты для рецепта'
+        verbose_name_plural = 'Ингредиенты для рецептов'
         constraints = [
             models.UniqueConstraint(
                 fields=['recipe', 'ingredient'],
@@ -227,7 +227,7 @@ class ShoppingList(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Список покупок'
+        verbose_name = 'Список покупки'
         verbose_name_plural = 'Списки покупок'
         constraints = [
             models.UniqueConstraint(

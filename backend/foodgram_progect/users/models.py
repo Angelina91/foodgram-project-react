@@ -1,13 +1,14 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
 from users.validators import validate_username_not_me
 
 
 class User(AbstractUser):
     """Кастомный User с распределенными правами по ролям"""
-    USERNAME_FIELD = 'username'
-    EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['email'],
+    # USERNAME_FIELD = 'username'
+    # EMAIL_FIELD = 'email'
+    # REQUIRED_FIELDS = ['email']
 
     # USER_ROLE = 'user'
     # MODERATOR_ROLE = 'moderator'
@@ -24,7 +25,7 @@ class User(AbstractUser):
         db_index=True,
         unique=True,
         validators=[validate_username_not_me],
-        verbose_name='Имя пользователя',
+        verbose_name='Логин пользователя',
         help_text='Ваш логин',
     )
     password = models.CharField(
