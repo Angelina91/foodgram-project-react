@@ -1,0 +1,3 @@
+python manage.py loaddata data.json # сделать внутри контрейнера
+
+без входа в контейнер - docker exec -it <имя контейнера> python manage.py loaddata <назание файла>/<путь до файла>

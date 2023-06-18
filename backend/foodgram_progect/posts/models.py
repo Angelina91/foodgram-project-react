@@ -39,7 +39,7 @@ class Recipe(models.Model):
         verbose_name='Ингредиенты для блюда',
         help_text='Ингредиенты для блюда',
     )
-    tag = models.ManyToManyField(
+    tags = models.ManyToManyField(
         'Tag',
         related_name='recipes',
         verbose_name='Тег',
@@ -53,7 +53,7 @@ class Recipe(models.Model):
     pub_date = models.DateTimeField(
         auto_now_add=True,
         verbose_name="Дата публикации",
-        help_text="Дата публикации"
+        help_text="Дата публикации",
     )
 
     class Meta:
@@ -210,7 +210,7 @@ class FavoriteRecipe(models.Model):
         return f'{self.recipe} for {self.user}'
 
 
-class ShoppingList(models.Model):
+class ShoppingCart(models.Model): # shopping_cart
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -221,7 +221,7 @@ class ShoppingList(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='in_shopping_list',
+        related_name='in_shopping_cart',
         verbose_name='Рецепт в списке покупок',
         help_text='Рецепт в списке покупок',
     )
@@ -232,7 +232,7 @@ class ShoppingList(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_shopping_list',
+                name='unique_shopping_cart',
             )
         ]
 
