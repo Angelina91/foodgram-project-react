@@ -10,6 +10,8 @@ User = get_user_model()
 
 
 class Recipe(models.Model):
+    """ Модель рецептов """
+
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -45,7 +47,7 @@ class Recipe(models.Model):
         verbose_name='Тег',
         help_text='Тег',
     )
-    cooking_time = models.PositiveIntegerField( # уточнить про это поле, если будут ошибки
+    cooking_time = models.PositiveIntegerField( 
         # слишком просто че-т
         verbose_name='Время приготовления',
         help_text='Время приготовления',
@@ -66,6 +68,8 @@ class Recipe(models.Model):
 
 
 class Tag(models.Model):
+    """ Модель для тегов """
+
     name = models.CharField(
         unique=True,
         max_length=150,
@@ -95,6 +99,8 @@ class Tag(models.Model):
 
 
 class Ingredient(models.Model):
+    """ Модель для ингридиентов """
+
     name = models.CharField(
         max_length=100,
         unique=True,
@@ -116,6 +122,7 @@ class Ingredient(models.Model):
 
 
 class IngredientDetale(models.Model):
+    """ Промкжуточная модель для Ингредиентов и Рецептов"""
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
@@ -151,6 +158,8 @@ class IngredientDetale(models.Model):
 
 
 class FavoriteAuthor(models.Model):
+    """ Промежуточная модель для подписки на автора """
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -181,6 +190,8 @@ class FavoriteAuthor(models.Model):
 
 
 class FavoriteRecipe(models.Model):
+    """ Промежуточная модель для избранных рецептов """
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -211,6 +222,8 @@ class FavoriteRecipe(models.Model):
 
 
 class ShoppingCart(models.Model): # shopping_cart
+    """ Список покупок """    
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

@@ -73,7 +73,7 @@ class User(AbstractUser):
     is_subcribed = models.BooleanField(
         default=False,
         verbose_name='Подписка на автора',
-        help_text='Подписаться на автора',
+        help_text='Отметка о подписке на автора',
     )
 
     class Meta:
