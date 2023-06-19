@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from users.validators import validate_username_not_me
+from .validators import validate_username_not_me
 
 
 class User(AbstractUser):
@@ -20,6 +20,13 @@ class User(AbstractUser):
     #     (ADMIN_ROLE, 'admin'),
     # )
 
+    email = models.EmailField(
+        max_length=254,
+        db_index=True,
+        unique=True,
+        verbose_name='Адрес электронной почты',
+        help_text='Введите адрес электронной почты',
+    )
     username = models.CharField(
         max_length=150,
         db_index=True,
@@ -34,13 +41,6 @@ class User(AbstractUser):
         help_text='Ваш пароль',
     )
 
-    email = models.EmailField(
-        max_length=254,
-        db_index=True,
-        unique=True,
-        verbose_name='Адрес электронной почты',
-        help_text='Введите адрес электронной почты',
-    )
     # role = models.CharField(
     #     choices=ROLE_CHOICES,
     #     max_length=50,
