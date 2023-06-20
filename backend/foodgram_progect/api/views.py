@@ -8,13 +8,17 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 ...
-from posts.models import FavoriteAuthor, Tag
+from posts.models import FavoriteAuthor, Tag, Ingredient, IngredientDetale
 from users.models import User
 
 from .serializers import (CustomUserSerializer, SubscriptionsSerializer,
-                          TagSerializer)
+                          TagSerializer, IngredientSerializer,
+                          IngredientDetaleSerializer,
+                        )
+
 
 ...
 
@@ -38,7 +42,7 @@ class CustomUserViewSet(UserViewSet):
 class SubscriptionsView(APIView):
     """ Подписка на автора/ отписка"""
 
-    permisson_classes = (IsAuthenticated, )
+    permisson_classes = [IsAuthenticated, ]
     def post(self, request, id):
         data = {
             'user': request.user.id,
@@ -68,7 +72,15 @@ class SubscriptionsView(APIView):
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """ Тэги """
 
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
 
+class IngredientViewSet(ReadOnlyModelViewSet):
+    """ Ингредиенты """
+
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    # permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (DjangoFilterBackend,)
+    # filterset_class = IngredientFilter

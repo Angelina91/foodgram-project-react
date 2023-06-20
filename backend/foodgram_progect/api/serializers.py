@@ -5,6 +5,7 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
                           IngredientDetale, Recipe, ShoppingCart, Tag)
 from rest_framework import serializers
+from rest_framework.fields import IntegerField
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 from users.models import User
@@ -59,4 +60,33 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'name', 'color', 'slug')
-    
+
+class IngredientSerializer(serializers.ModelSerializer):
+    """ Ингредиенты """
+
+    class Meta:
+        model = Ingredient
+        fields = '__all__'
+
+class IngredientDetaleSerializer(serializers.ModelSerializer):
+    """ Ингредиенты для рецепта """
+
+    id = IntegerField(write_only=True)
+
+    class Meta:
+        model = IngredientDetale
+        fields = ('id', 'amount')
+
+class FavoriteRicipeSerializer(serializers.ModelSerializer):
+    """ Избранный рецепт """
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id',
+            'name',
+            'image',
+            'text',
+            'cooking_time',
+            'pub_date',
+        )
