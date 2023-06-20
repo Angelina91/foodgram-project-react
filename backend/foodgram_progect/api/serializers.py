@@ -2,12 +2,11 @@
 # from django.db.models import Avg
 # from users.validators import validate_username_not_me
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from rest_framework import serializers
-from rest_framework.relations import SlugRelatedField
-from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
-
 from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
                           IngredientDetale, Recipe, ShoppingCart, Tag)
+from rest_framework import serializers
+from rest_framework.relations import SlugRelatedField
+from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 from users.models import User
 
 
@@ -53,3 +52,11 @@ class SubscriptionsSerializer(serializers.ModelSerializer):
                 fields=('user', 'author'),
             )
         ]
+
+class TagSerializer(serializers.ModelSerializer):
+    """ Сериализатор Тэгов """
+
+    class Meta:
+        model = Tag
+        fields = ('id', 'name', 'color', 'slug')
+    

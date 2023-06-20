@@ -1,6 +1,7 @@
+from http import HTTPStatus
+
 from django.shortcuts import get_object_or_404, render
 from django_filters.rest_framework import DjangoFilterBackend
-from http import HTTPStatus
 from djoser.views import UserViewSet
 from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import action
@@ -9,10 +10,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 ...
+from posts.models import FavoriteAuthor, Tag
 from users.models import User
-from posts.models import FavoriteAuthor
 
-from .serializers import CustomUserSerializer, SubscriptionsSerializer
+from .serializers import (CustomUserSerializer, SubscriptionsSerializer,
+                          TagSerializer)
 
 ...
 
@@ -36,7 +38,7 @@ class CustomUserViewSet(UserViewSet):
 class SubscriptionsView(APIView):
     """ Подписка на автора/ отписка"""
 
-    #permisson_classes = (IsAuthenticated,)
+    permisson_classes = (IsAuthenticated, )
     def post(self, request, id):
         data = {
             'user': request.user.id,
@@ -62,3 +64,11 @@ class SubscriptionsView(APIView):
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class TagViewSet(viewsets.ReadOnlyModelViewSet):
+    """ Тэги """
+
+    permission_classes = (AllowAny, )
+    serializer_class = TagSerializer
+    queryset = Tag.objects.all()
+

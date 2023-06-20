@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'django_filters',
+    'colorfield', # Run python manage.py collectstatic!!!!!!!!!!!!!!!!
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
     'posts.apps.PostsConfig',
