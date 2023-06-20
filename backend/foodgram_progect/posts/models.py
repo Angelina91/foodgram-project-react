@@ -222,7 +222,7 @@ class FavoriteRecipe(models.Model):
 
 
 class ShoppingCart(models.Model): # shopping_cart
-    """ Список покупок """    
+    """ Список покупок """
 
     user = models.ForeignKey(
         User,

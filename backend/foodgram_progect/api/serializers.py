@@ -4,7 +4,7 @@
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
-from rest_framework.validators import UniqueValidator
+from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 
 from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
                           IngredientDetale, Recipe, ShoppingCart, Tag)
@@ -12,6 +12,8 @@ from users.models import User
 
 
 class CreateUserSerializer(UserCreateSerializer):
+    """ Создание пользователя """
+
     class Meta:
         model = User
         fields = ('email', 'username', 'password', 'first_name', 'last_name',)
@@ -19,6 +21,7 @@ class CreateUserSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
+    """ Сериализатор для модели пользователя """
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
@@ -37,3 +40,16 @@ class CustomUserSerializer(UserSerializer):
         return FavoriteAuthor.objects.filter(
             user=user, author=obj
         ).exists() if user.is_authenticated else False
+
+class SubscriptionsSerializer(serializers.ModelSerializer):
+    """ Подписка на автора """
+
+    class Meta:
+        model = FavoriteAuthor
+        fields = ('user', 'author')
+        validators = [
+            UniqueTogetherValidator(
+                queryset=FavoriteAuthor.objects.all(),
+                fields=('user', 'author'),
+            )
+        ]

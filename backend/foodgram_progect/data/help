@@ -28,3 +28,6 @@ python manage.py loaddata data.json # сделать внутри контрей
 #                 )
 #             ]
 #         }
+
+# class CommentSerializer(serializers.Serializer):
+#     email = serializers.EmailField(source="user.email")
