@@ -1,6 +1,6 @@
-from rest_framework import generics
 from django_filters import rest_framework as filters
-from posts.models import Ingredient, Tag, Recipe
+from posts.models import Ingredient, Recipe, Tag
+from rest_framework import generics
 
 
 class IngredientList(generics.ListAPIView):

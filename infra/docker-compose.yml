@@ -1,4 +1,5 @@
-version: '3.3'
+version: '3.8'
+name: foodgram_progect
 services:
 
   db:
@@ -18,6 +19,7 @@ services:
     env_file:
       - ./.env
   frontend:
+  # тут потом надо прописат адрес образа - вебинар - 01:08    
     build:
       context: ../frontend
       dockerfile: ../backend/foodgram_progect/foodgram_progect/Dockerfile
