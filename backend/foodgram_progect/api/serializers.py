@@ -1,8 +1,8 @@
 # from datetime import date
 # from django.db.models import Avg
 # from users.validators import validate_username_not_me
-from djoser.serializers import UserCreateSerializer, UserSerializer
 from django.db.models import F
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
                           IngredientDetale, Recipe, ShoppingCart, Tag)
@@ -25,7 +25,15 @@ class CreateUserSerializer(UserCreateSerializer):
 
 class CustomUserSerializer(UserSerializer):
     """ Сериализатор для модели пользователя """
-    is_subscribed = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField(
+        method_name='get_is_subscribed'
+    )
+
+    def get_is_subscribed(self, obj):
+        user = self.context['request'].user
+        return FavoriteAuthor.objects.filter(
+            user=user, author=obj
+        ).exists() if user.is_authenticated else False
 
     class Meta:
         model = User
@@ -38,15 +46,34 @@ class CustomUserSerializer(UserSerializer):
             'is_subscribed'
         )
 
-    def get_is_subscribed(self, obj):
-        user = self.context['request'].user
-        return FavoriteAuthor.objects.filter(
-            user=user, author=obj
-        ).exists() if user.is_authenticated else False
 
-
-class SubscriptionsSerializer(serializers.ModelSerializer):
+class SubscriptionsSerializer(CustomUserSerializer):
     """ Подписка на автора """
+
+    is_subscribed = serializers.SerializerMethodField(
+        method_name='get_is_subscribed'
+    )
+    recipes = serializers.SerializerMethodField(method_name='get_recipes')
+    recipes_count = serializers.SerializerMethodField(
+        method_name='get_recipes_count'
+    )
+
+    def get_recipes(self, obj):
+        author = Recipe.objects.filter(author=obj)
+        if 'recipes_limit' in self.context.get('request').GET:
+            recipes_limit = self.context.get('request').GET['recipes_limit']
+            author = author[:int(recipes_limit)]
+        return []
+
+    def get_recipes_count(self, obj):
+        return Recipe.objects.filter(author=obj.author).count()
+
+    def get_is_subscribed(self, obj):
+        return FavoriteAuthor.objects.filter(
+            user=obj.user,
+            author=obj.author
+        ).exists()
+
 
     class Meta:
         model = FavoriteAuthor

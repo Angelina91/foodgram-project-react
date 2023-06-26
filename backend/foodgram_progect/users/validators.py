@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 
 def validate_username_not_me(value):
     """Проверка, чтоб 'username' не было присвоено 'me' """
+
     if value.lower() == 'me':
         raise ValidationError(
             'Выберите другое обозначение для username'
