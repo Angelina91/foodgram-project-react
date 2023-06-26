@@ -1,6 +1,3 @@
-# from datetime import date
-# from django.db.models import Avg
-# from users.validators import validate_username_not_me
 from django.db.models import F
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
@@ -19,7 +16,13 @@ class CreateUserSerializer(UserCreateSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'password', 'first_name', 'last_name',)
+        fields = (
+            'email',
+            'username',
+            'first_name',
+            'last_name',
+            'password',
+        )
         extra_kwargs = {'password': {'wrtite_only': True}}
 
 
@@ -38,8 +41,8 @@ class CustomUserSerializer(UserSerializer):
     class Meta:
         model = User
         fields = (
-            'email',
             'id',
+            'email',
             'username',
             'first_name',
             'last_name',
@@ -74,10 +77,18 @@ class SubscriptionsSerializer(CustomUserSerializer):
             author=obj.author
         ).exists()
 
-
     class Meta:
         model = FavoriteAuthor
-        fields = ('user', 'author')
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'recipes',
+            'recipes_count',
+        )
         validators = [
             UniqueTogetherValidator(
                 queryset=FavoriteAuthor.objects.all(),
@@ -136,7 +147,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = GetIngredientSerializer(many=True,
                                           read_only=True,
                                           source='amount_ingredient')
-    is_favorited = SerializerMethodField(read_only=True)
+    is_favorite = SerializerMethodField(read_only=True)
     is_in_shopping_cart = SerializerMethodField(read_only=True)
 
     class Meta:
@@ -150,7 +161,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'author',
             'pub_date',
             'ingredients',
-            'is_favorited',
+            'is_favorite',
             'is_in_shopping_cart',
         )
 
@@ -165,7 +176,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     #     )
     #     return ingredients
 
-    def is_favorited(self, obj):
+    def get_is_favorite(self, obj):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
@@ -228,15 +239,6 @@ class PostRecipeSerializer(serializers.ModelSerializer):
                 recipe=recipe
             )
         return recipe
-
-# class ContactForm(serializers.Serializer):
-#     email = serializers.EmailField()
-#     message = serializers.CharField()
-
-#     def save(self):
-#         email = self.validated_data['email']
-#         message = self.validated_data['message']
-#         send_email(from=email, message=message)
 
     def create(self, validated_data):
         tags = validated_data.pop('tags')

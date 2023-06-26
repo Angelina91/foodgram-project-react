@@ -21,36 +21,37 @@ class Recipe(models.Model):
     )
 
     name = models.CharField(
-        verbose_name='Название рецепта',
-        max_length=150,
-        help_text='Название рецепта',
+        verbose_name='Название',
+        max_length=200,
+        help_text='Название',
     )
     image = models.ImageField(
-        verbose_name='Фото блюда',
-        help_text='Фото блюда',
+        verbose_name='Картинка, закодированная в Base64',
+        help_text='Картинка, закодированная в Base64',
     )
     text = models.TextField(
-        verbose_name='Рецепт',
-        help_text='Рецепт',
+        verbose_name='Описание',
+        help_text='Описание',
     )
     # slug = models.SlugField(max_length=50)
     ingredients = models.ManyToManyField(
         'Ingredient',
         through='IngredientDetale',
         related_name='recipes',
-        verbose_name='Ингредиенты для блюда',
-        help_text='Ингредиенты для блюда',
+        verbose_name='Список ингредиентов',
+        help_text='Список ингредиентов',
     )
     tags = models.ManyToManyField(
         'Tag',
         related_name='recipes',
-        verbose_name='Тег',
-        help_text='Тег',
+        verbose_name='Список id тегов',
+        help_text='Список id тегов',
     )
     cooking_time = models.PositiveIntegerField( 
-        # слишком просто че-т
-        verbose_name='Время приготовления',
-        help_text='Время приготовления',
+        validators=(MinValueValidator(1),),
+        default=1,
+        verbose_name='Время приготовления (в минутах)',
+        help_text='Время приготовления (в минутах)',
     )
     pub_date = models.DateTimeField(
         auto_now_add=True,
@@ -228,7 +229,7 @@ class FavoriteRecipe(models.Model):
         return f'{self.recipe} for {self.user}'
 
 
-class ShoppingCart(models.Model): # shopping_cart
+class ShoppingCart(models.Model):
     """ Список покупок """
 
     user = models.ForeignKey(
