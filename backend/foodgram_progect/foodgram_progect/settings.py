@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent # менять?
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -156,8 +156,8 @@ REST_FRAMEWORK = {
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'SERIALIZERS': {
-        'user_create': 'api.serializers.CustomUserCreateSerializer',
-        'user': 'api.serializers.CustomUserSerializer',
-        'current_user': 'api.serializers.CustomUserSerializer',
+        'user_create': 'api.serializers.CreateUserSerializer',
+        'user': 'api.serializers.CreateUserSerializer',
+        'current_user': 'api.serializers.CreateUserSerializer',
     },
 }

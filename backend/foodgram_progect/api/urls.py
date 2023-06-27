@@ -24,8 +24,3 @@ urlpatterns = [
     path('v1/', include(router_v1.urls)),
     path('v1/auth/', include('djoser.urls.authtoken')),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-    )
