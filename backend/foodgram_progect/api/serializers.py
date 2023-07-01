@@ -1,13 +1,14 @@
 from django.db.models import F
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
-                          IngredientDetale, Recipe, ShoppingCart, Tag)
 from rest_framework import serializers
 from rest_framework.fields import (IntegerField, ReadOnlyField,
                                    SerializerMethodField)
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
+
+from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
+                          IngredientDetale, Recipe, ShoppingCart, Tag)
 from users.models import User
 
 
@@ -148,8 +149,14 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = GetIngredientSerializer(many=True,
                                           read_only=True,
                                           source='amount_ingredient')
-    is_favorite = SerializerMethodField(read_only=True)
-    is_in_shopping_cart = SerializerMethodField(read_only=True)
+    is_favorite = SerializerMethodField(
+        method_name='get_is_favorite',
+        read_only=True,
+    )
+    is_in_shopping_cart = SerializerMethodField(
+        method_name='get_is_in_shopping_cart',
+        read_only=True,
+    )
 
     class Meta:
         model = Recipe
@@ -158,6 +165,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'name',
             'image',
             'text',
+            'tags',
             'cooking_time',
             'author',
             'pub_date',
@@ -178,16 +186,26 @@ class RecipeSerializer(serializers.ModelSerializer):
     #     return ingredients
 
     def get_is_favorite(self, obj):
-        user = self.context.get('request').user
-        if user.is_anonymous:
-            return False
-        return user.favorite_list.filter(recipe=obj).exists()
+        user = self.context['request'].user.id
+        recipe = obj.id
+        # if user.is_anonymous:
+        #     return False
+        return FavoriteRecipe.objects.filter(
+            user_id=user,
+            recipe_id=recipe,
+        ).exists()
 
     def get_is_in_shopping_cart(self, obj):
-        user = self.context.get('request').user
+        user = self.context['request'].user.id
+        recipe = obj.id
+
         if user.is_anonymous:
             return False
-        return user.in_shopping_cart.filter(recipe=obj).exists()
+
+        return ShoppingCart.objects.filter(
+            user_id=user,
+            recipe_id=recipe,
+        ).exists()
 
 
 class PostRecipeSerializer(serializers.ModelSerializer):
@@ -274,4 +292,5 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
             'image',
             'cooking_time',
         )
+
 # Example:def create(self, validated_data): email = validated_data.get("email", None) validated.pop("email") # Now you have a clean valid email string # You might want to call an external API or modify another table # (eg. keep track of number of accounts registered.) or even # make changes to the email format. # Once you are done, create the instance with the validated data return models.YourModel.objects.create(email=email, **validated_data)

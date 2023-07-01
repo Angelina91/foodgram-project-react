@@ -1,12 +1,12 @@
 from django_filters import rest_framework as filters
-from posts.models import Ingredient, Recipe, Tag
 from rest_framework import generics
 
+from posts.models import Ingredient, Recipe, Tag
 
-class IngredientList(generics.ListAPIView):
-    queryset = Ingredient.objects.all()
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_fields = ('name',)
+# class IngredientList(generics.ListAPIView):
+#     queryset = Ingredient.objects.all()
+#     filter_backends = (filters.DjangoFilterBackend,)
+#     filterset_fields = ('name',)
 
 
 # Equivalent FilterSet:

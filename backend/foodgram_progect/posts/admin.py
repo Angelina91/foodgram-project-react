@@ -3,6 +3,9 @@ from django.contrib import admin
 from .models import Ingredient, Recipe, Tag
 
 
+class IngredientInline(admin.TabularInline):
+    model = Recipe.ingredients.through
+
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
@@ -15,7 +18,7 @@ class IngredientAdmin(admin.ModelAdmin):
 
 
 @admin.register(Recipe)
-class RecipeAdmon(admin.ModelAdmin):
+class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         'name',
@@ -24,9 +27,11 @@ class RecipeAdmon(admin.ModelAdmin):
     list_filter = (
         'author',
         'name',
-        # 'tags',
+    )
+    inlines = (
+        IngredientInline,
     )
 
 
 admin.site.register(Tag)
-# Register your models here.
+

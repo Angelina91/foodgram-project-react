@@ -1,24 +1,26 @@
 from http import HTTPStatus
-from django.http import HttpResponse
+
 from django.db.models import Sum
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from rest_framework import filters, permissions, status, viewsets, exceptions
-
+from rest_framework import exceptions, filters, permissions, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (AllowAny, IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from .renderers import ShoppingcartRenderer
 from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
                           IngredientDetale, Recipe, ShoppingCart, Tag)
 from users.models import User
 
-from .filters import RecipeFilter
+from .filters import IngredientFilter, RecipeFilter
+from .pagination import CustomPagination
+from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+from .renderers import ShoppingcartRenderer
 from .serializers import (CustomUserSerializer, FavoriteRecipeSerializer,
                           IngredientSerializer, PostRecipeSerializer,
                           RecipeSerializer, SubscriptionsSerializer,
@@ -100,12 +102,12 @@ class CustomUserViewSet(UserViewSet):
     #         return Response(status=HTTPStatus.NO_CONTENT)
     #     return Response(status=HTTPStatus.METHOD_NOT_ALLOWED)
 
-
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ('username', 'email')
     permission_classes = (AllowAny,)
+    pagination_class = CustomPagination
 
 
 class SubscriptionsView(APIView):
@@ -153,8 +155,9 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('^name',)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
+    filterset_class = IngredientFilter
+    pagination_class = CustomPagination
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -162,9 +165,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    # permission_classes = ...
+    # permission_classes = IsAuthorOrReadOnly
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
+    pagination_class = CustomPagination
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -183,14 +187,25 @@ class RecipeViewSet(viewsets.ModelViewSet):
             ).exists():
                 database.objects.create(
                     user=self.request.user,
-                    recipe=recipe,
-                )
+                    recipe=recipe)
                 serializer = FavoriteRecipeSerializer()# ?
                 return Response(
                     serializer.data,
                     status=HTTPStatus.CREATED,
                 )
             error_text = 'Рецепт уже добавлен'
+            return Response(error_text, status=HTTPStatus.BAD_REQUEST)
+        elif request.method == 'DELETE':
+            if database.objects.filter(
+                user=self.request.user,
+                recipe=recipe,
+            ).exists():
+                database.objects.filter(
+                    user=self.request.user,
+                    recipe=recipe,
+                ).delete()
+                return Response(status=HTTPStatus.NO_CONTENT)
+            error_text = 'Такого объекта нет в списке'
             return Response(error_text, status=HTTPStatus.BAD_REQUEST)
         else:
             error_text = 'Выбран неверный метод запроса'
@@ -204,14 +219,21 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def favorite(self, request, pk=None):
         return self.post_delete(request, pk, FavoriteRecipe)
 
+    # def shopping_cart(self, request, pk):
+    #     return self.post_delete(request, pk, ShoppingCart)
+
+    @action(
+        detail=True,
+        methods=['POST', 'DELETE'],
+        permission_classes=(IsAuthenticated,)
+    )
     def shopping_cart(self, request, pk):
         return self.post_delete(request, pk, ShoppingCart)
 
     @action(
-        detail=True,
+        detail=False,
         methods=['GET'],
-
-        # permission_classes=(IsAuthenticated,)
+        permission_classes=(IsAuthenticated,)
     )
     def download_shopping_cart(self, request):
         shopping_cart = ShoppingCart.objects.filter(user=self.request.user)
@@ -232,8 +254,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 f'{ingredient.measurement_unit}\n'
             )
 
-        response = HttpResponse(shop_list_text, content_type='text/plain')
+        response = HttpResponse(shop_list_text, content_type='application/pdf')
         response['Content-disposition'] = (
-            'attachment; filename=shopping-list.txt'
+            'attachment; filename=shopping-list.pdf'
         )
         return response

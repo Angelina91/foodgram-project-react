@@ -6,6 +6,8 @@ from django_measurement.models import MeasurementField
 # from measurement.measures import Volume
 from measurement.measures import Weight
 
+from .validators import validate_slug
+
 User = get_user_model()
 
 
@@ -73,20 +75,22 @@ class Tag(models.Model):
 
     name = models.CharField(
         unique=True,
-        max_length=150,
+        max_length=200,
         verbose_name='Тег',
         help_text='Название Тега',
     )
     color = ColorField(
         unique=True,
+        max_length=7,
         format='hex',
         default='#F869D5',
         verbose_name='Hex-code',
         help_text='Hex-code',
     )
     slug = models.SlugField(
-        max_length=50,
+        max_length=200,
         unique=True,
+        validators=[validate_slug],
         verbose_name='slug',
         help_text='slug',
     )
