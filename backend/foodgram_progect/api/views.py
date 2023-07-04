@@ -19,7 +19,7 @@ from users.models import User
 
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
-from .permissions import IsStaffOrReadOnly, IsAuthorOrReadOnly
+from .permissions import IsAuthorOrReadOnly
 # from .renderers import ShoppingcartRenderer
 from .serializers import (FavoriteRecipeSerializer, IngredientSerializer,
                           PostRecipeSerializer, RecipeSerializer,
