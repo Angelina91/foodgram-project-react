@@ -6,6 +6,7 @@ from .models import Ingredient, Recipe, Tag
 class IngredientInline(admin.TabularInline):
     model = Recipe.ingredients.through
 
+
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
@@ -34,4 +35,3 @@ class RecipeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Tag)
-

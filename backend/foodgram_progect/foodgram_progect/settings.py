@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BASE_DIR = Path(__file__).resolve().parent.parent # менять?
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
 
@@ -30,7 +30,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'djoser',
     'django_filters',
-    'colorfield', # Run python manage.py collectstatic!!!!!!!!!!!!!!!!
+    'colorfield',
+    # Run python manage.py collectstatic!!!!!!!!!!!!!!!!
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
     'posts.apps.PostsConfig',

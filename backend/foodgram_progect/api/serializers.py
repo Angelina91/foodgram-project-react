@@ -1,11 +1,9 @@
-from django.db.models import F
+# from django.db.models import F
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.fields import (IntegerField, ReadOnlyField,
                                    SerializerMethodField)
-from rest_framework.relations import SlugRelatedField
-from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
 from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
                           IngredientDetale, Recipe, ShoppingCart, Tag)
@@ -287,5 +285,3 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
             'image',
             'cooking_time',
         )
-
-# Example:def create(self, validated_data): email = validated_data.get("email", None) validated.pop("email") # Now you have a clean valid email string # You might want to call an external API or modify another table # (eg. keep track of number of accounts registered.) or even # make changes to the email format. # Once you are done, create the instance with the validated data return models.YourModel.objects.create(email=email, **validated_data)

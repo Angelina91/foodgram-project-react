@@ -1,12 +1,14 @@
 from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
-from django_measurement.models import MeasurementField
-# from measurement.measures import Volume
-from measurement.measures import Weight
 
 from .validators import validate_slug
+
+# from django_measurement.models import MeasurementField
+# from measurement.measures import Volume
+# from measurement.measures import Weight
+
 
 User = get_user_model()
 
@@ -49,7 +51,7 @@ class Recipe(models.Model):
         verbose_name='Список id тегов',
         help_text='Список id тегов',
     )
-    cooking_time = models.PositiveIntegerField( 
+    cooking_time = models.PositiveIntegerField(
         validators=(MinValueValidator(1),),
         default=1,
         verbose_name='Время приготовления (в минутах)',

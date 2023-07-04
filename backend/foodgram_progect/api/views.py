@@ -1,17 +1,17 @@
 from http import HTTPStatus
 
 from django.db.models import Sum
-from django.http import FileResponse, HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from rest_framework import exceptions, filters, permissions, status, viewsets
+from rest_framework import exceptions, filters, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+# from rest_framework.views import APIView
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
                           IngredientDetale, Recipe, ShoppingCart, Tag)
@@ -19,14 +19,11 @@ from users.models import User
 
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
-from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
-from .renderers import ShoppingcartRenderer
-from .serializers import (CustomUserSerializer, FavoriteRecipeSerializer,
-                          IngredientSerializer, PostRecipeSerializer,
-                          RecipeSerializer, SubscriptionsSerializer,
-                          TagSerializer)
-
-...
+from .permissions import IsStaffOrReadOnly, IsAuthorOrReadOnly
+# from .renderers import ShoppingcartRenderer
+from .serializers import (FavoriteRecipeSerializer, IngredientSerializer,
+                          PostRecipeSerializer, RecipeSerializer,
+                          SubscriptionsSerializer, TagSerializer)
 
 
 class CustomUserViewSet(UserViewSet):
@@ -69,7 +66,7 @@ class CustomUserViewSet(UserViewSet):
             ).exists():
                 raise exceptions.ValidationError(
                     'На этого автора уже есть подписка'
-                    )
+                )
             FavoriteAuthor.objects.create(user=user, author=author)
             serializer = self.get_serializer(author)
 
@@ -118,7 +115,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    # permission_classes = IsAuthorOrReadOnly
+    permission_classes = (IsAuthorOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     pagination_class = CustomPagination

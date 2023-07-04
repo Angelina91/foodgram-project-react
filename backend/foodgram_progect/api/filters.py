@@ -1,20 +1,13 @@
 from django_filters import rest_framework as filters
-from rest_framework import generics
 
 from posts.models import Ingredient, Recipe, Tag
 
-# class IngredientList(generics.ListAPIView):
-#     queryset = Ingredient.objects.all()
-#     filter_backends = (filters.DjangoFilterBackend,)
-#     filterset_fields = ('name',)
 
-
-# Equivalent FilterSet:
 class IngredientFilter(filters.FilterSet):
     name = filters.CharFilter(
         field_name='name',
         lookup_expr='startswith',
-        )
+    )
 
     class Meta:
         model = Ingredient
