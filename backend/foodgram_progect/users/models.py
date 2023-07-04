@@ -43,11 +43,11 @@ class User(AbstractUser):
         help_text='Введите пароль',
     )
 
-    # is_subcribed = models.BooleanField(
-    #     default=False,
-    #     verbose_name='Подписка на автора',
-    #     help_text='Отметка о подписке на автора',
-    # )
+    is_subcribed = models.BooleanField(
+        default=False,
+        verbose_name='Подписка на автора',
+        help_text='Отметка о подписке на автора',
+    )
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -59,3 +59,6 @@ class User(AbstractUser):
             ),
         ]
         ordering = ('username',)
+
+    def __str__(self):
+        return self.username

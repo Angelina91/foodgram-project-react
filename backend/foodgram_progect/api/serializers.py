@@ -36,9 +36,12 @@ class CustomUserSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         user = self.context['request'].user
+        if user.is_anonymous:
+            return False
         return FavoriteAuthor.objects.filter(
-            user=user, author=obj
-        ).exists() if user.is_authenticated else False
+            user=user,
+            author=obj
+        ).exists()
 
     class Meta:
         model = User
@@ -55,32 +58,24 @@ class CustomUserSerializer(UserSerializer):
 class SubscriptionsSerializer(CustomUserSerializer):
     """ Подписка на автора """
 
-    is_subscribed = serializers.SerializerMethodField(
-        method_name='get_is_subscribed'
-    )
     recipes = serializers.SerializerMethodField(method_name='get_recipes')
     recipes_count = serializers.SerializerMethodField(
-        method_name='get_recipes_count'
+        method_name='get_recipes_count',
+        read_only=True,
     )
 
     def get_recipes(self, obj):
-        author = Recipe.objects.filter(author=obj)
+        author_recipes = Recipe.objects.filter(author=obj)
         if 'recipes_limit' in self.context.get('request').GET:
             recipes_limit = self.context.get('request').GET['recipes_limit']
-            author = author[:int(recipes_limit)]
+            author_recipes = author_recipes[:int(recipes_limit)]
         return []
 
     def get_recipes_count(self, obj):
-        return Recipe.objects.filter(author=obj.author).count()
-
-    def get_is_subscribed(self, obj):
-        return FavoriteAuthor.objects.filter(
-            user=obj.user,
-            author=obj.author
-        ).exists()
+        return Recipe.objects.filter(author=obj).count()
 
     class Meta:
-        model = FavoriteAuthor
+        model = User
         fields = (
             'email',
             'id',
@@ -91,12 +86,12 @@ class SubscriptionsSerializer(CustomUserSerializer):
             'recipes',
             'recipes_count',
         )
-        validators = [
-            UniqueTogetherValidator(
-                queryset=FavoriteAuthor.objects.all(),
-                fields=('user', 'author'),
-            )
-        ]
+        # validators = [
+        #     UniqueTogetherValidator(
+        #         queryset=FavoriteAuthor.objects.all(),
+        #         fields=('user', 'author'),
+        #     )
+        # ]
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -199,8 +194,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         user = self.context['request'].user.id
         recipe = obj.id
 
-        if user.is_anonymous:
-            return False
+        # if user.is_anonymous:
+        #     return False
 
         return ShoppingCart.objects.filter(
             user_id=user,

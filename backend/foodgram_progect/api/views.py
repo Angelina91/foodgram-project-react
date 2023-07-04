@@ -32,114 +32,67 @@ from .serializers import (CustomUserSerializer, FavoriteRecipeSerializer,
 class CustomUserViewSet(UserViewSet):
     """ Пользователь с настройками подписки """
 
-    # queryset = User.objects.all()
-    # serializer_class = CustomUserSerializer
-    # filter_backends = [filters.SearchFilter]
-    # search_fields = ('username', 'email')
-    # permission_classes = (AllowAny,)
-
-    # # permission_classes = (IsAuthenticatedOrReadOnly, )
-
-    # @action(
-    #     detail=False,
-    #     methods=['GET'],
-    #     serializer_class=SubscriptionsSerializer,
-    #     # permission_classes=(IsAuthenticated)
-    # )
-    # def subscriptions(self, request):
-    #     user = self.request.user
-    #     user_subscriptions = user.follower.all()
-    #     authors = [item.author.id for item in user_subscriptions]
-    #     queryset = User.objects.filter(pk__in=authors)
-    #     paginated_queryset = self.paginate_queryset(queryset)
-    #     serializer = self.get_serializer(paginated_queryset, many=True)
-
-    #     return self.get_paginated_response(serializer.data)
-
-    # @action(
-    #     detail=True,
-    #     methods=['POST', 'DELETE'],
-    #     serializer_class=SubscriptionsSerializer
-    # )
-    # def subscribe(self, request, id=None):
-    #     user = self.request.user
-    #     author = get_object_or_404(User, pk=id)
-    #     if self.request.method == 'POST':
-    #         if user == author:
-    #             raise exceptions.ValidationError(
-    #                 'На себя подписываться нет смысла)'
-    #             )
-    #         if FavoriteAuthor.objects.filter(
-    #             user=user,
-    #             author=author
-    #         ).exists():
-    #             raise exceptions.ValidationError(
-    #                 'Такой подписки нет'
-    #             )
-    #         FavoriteAuthor.objects.create(
-    #             user=user,
-    #             author=author
-    #         )
-    #         serializer = self.get_serializer(author)
-    #         return Response(
-    #             serializer.data,
-    #             status=status.HTTP_201_CREATED
-    #         )
-    #     if self.request.method == 'DELETE':
-    #         if not FavoriteAuthor.objects.filter(
-    #             user=user,
-    #             author=author
-    #         ).exists():
-    #             raise exceptions.ValidationError(
-    #                 'Такой подписки нет'
-    #             )
-    #         subscription = get_object_or_404(
-    #             FavoriteAuthor,
-    #             user=user,
-    #             author=author
-    #         )
-    #         subscription.delete()
-    #         return Response(status=HTTPStatus.NO_CONTENT)
-    #     return Response(status=HTTPStatus.METHOD_NOT_ALLOWED)
-
-    queryset = User.objects.all()
-    serializer_class = CustomUserSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ('username', 'email')
-    permission_classes = (AllowAny,)
     pagination_class = CustomPagination
+    permission_classes = (IsAuthenticatedOrReadOnly, )
 
+    @action(
+        detail=False,
+        methods=['GET'],
+        serializer_class=SubscriptionsSerializer,
+        permission_classes=(IsAuthenticated,)
+    )
+    def subscriptions(self, request):
+        user = self.request.user
+        user_subscriptions = user.follower.all()
+        authors = [item.author.id for item in user_subscriptions]
+        queryset = User.objects.filter(pk__in=authors)
+        paginated_queryset = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(paginated_queryset, many=True)
+        return self.get_paginated_response(serializer.data)
 
-class SubscriptionsView(APIView):
-    """ Подписка на автора/ отписка"""
+    @action(
+        methods=['POST', 'DELETE'],
+        detail=True,
+        serializer_class=SubscriptionsSerializer
+    )
+    def subscribe(self, request, id=None):
+        user = self.request.user
+        author = get_object_or_404(User, pk=id)
+        if self.request.method == 'POST':
+            if user == author:
+                raise exceptions.ValidationError(
+                    'Нельзя подписаться на самого себя'
+                )
+            if FavoriteAuthor.objects.filter(
+                user=user,
+                author=author
+            ).exists():
+                raise exceptions.ValidationError(
+                    'На этого автора уже есть подписка'
+                    )
+            FavoriteAuthor.objects.create(user=user, author=author)
+            serializer = self.get_serializer(author)
 
-    permisson_classes = [IsAuthenticated, ]
+            return Response(serializer.data, status=HTTPStatus.CREATED)
 
-    def post(self, request, id):
-        data = {
-            'user': request.user.id,
-            'author': id
-        }
-        serializer = SubscriptionsSerializer(
-            data=data,
-            context={'request': request}
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, HTTPStatus.CREATED)
-        return Response(status=HTTPStatus.BAD_REQUEST)
-
-    def delete(self, request, id):
-        author = get_object_or_404(User, id=id)
-        if FavoriteAuthor.objects.filter(
-            user=request.user, author=author
-        ).exists():
+        if self.request.method == 'DELETE':
+            if not FavoriteAuthor.objects.filter(
+                user=user,
+                author=author
+            ).exists():
+                raise exceptions.ValidationError(
+                    'Нет такой подписки'
+                )
             subscription = get_object_or_404(
-                FavoriteAuthor, user=request.user, author=author
+                FavoriteAuthor,
+                user=user,
+                author=author
             )
             subscription.delete()
+
             return Response(status=HTTPStatus.NO_CONTENT)
-        return Response(status=HTTPStatus.BAD_REQUEST)
+
+        return Response(status=HTTPStatus.METHOD_NOT_ALLOWED)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -188,7 +141,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 database.objects.create(
                     user=self.request.user,
                     recipe=recipe)
-                serializer = FavoriteRecipeSerializer()# ?
+                serializer = FavoriteRecipeSerializer(recipe)
                 return Response(
                     serializer.data,
                     status=HTTPStatus.CREATED,
@@ -206,7 +159,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 ).delete()
                 return Response(status=HTTPStatus.NO_CONTENT)
             error_text = 'Такого объекта нет в списке'
-            return Response(error_text, status=HTTPStatus.BAD_REQUEST)
+            return Response(error_text, status=HTTPStatus.NO_CONTENT)
         else:
             error_text = 'Выбран неверный метод запроса'
             return Response(error_text, status=HTTPStatus.BAD_REQUEST)

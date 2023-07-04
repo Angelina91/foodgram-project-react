@@ -190,15 +190,19 @@ class FavoriteAuthor(models.Model):
     class Meta:
         verbose_name = 'Подписка на избранного автора'
         verbose_name_plural = 'Подписки на избранных авторов'
-        constraints = [
+        constraints = (
+            models.CheckConstraint(
+                check=~models.Q(user=models.F('author')),
+                name='no_self_subscribe'
+            ),
             models.UniqueConstraint(
-                fields=['user', 'author'],
-                name='favorite_author_for_user',
+                fields=('user', 'author'),
+                name='unique_subscription'
             )
-        ]
+        )
 
     def __str__(self):
-        return f'{self.author} for {self.user}'
+        return f'Оформление подписки {self.author} на {self.user}'
 
 
 class FavoriteRecipe(models.Model):
