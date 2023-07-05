@@ -3,9 +3,6 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from .validators import validate_slug
-
-
 User = get_user_model()
 
 
@@ -91,7 +88,7 @@ class Tag(models.Model):
         help_text='slug',
         error_messages={
             'name': {
-                'max_length' : ("Слишком длинный слаг"),
+                'max_length': ("Слишком длинный слаг"),
             },
         }
     )
