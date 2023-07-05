@@ -10,7 +10,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
-# from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
@@ -20,7 +19,6 @@ from users.models import User
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
 from .permissions import IsAuthorOrReadOnly
-# from .renderers import ShoppingcartRenderer
 from .serializers import (FavoriteRecipeSerializer, IngredientSerializer,
                           PostRecipeSerializer, RecipeSerializer,
                           SubscriptionsSerializer, TagSerializer)
@@ -168,9 +166,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def favorite(self, request, pk=None):
         return self.post_delete(request, pk, FavoriteRecipe)
-
-    # def shopping_cart(self, request, pk):
-    #     return self.post_delete(request, pk, ShoppingCart)
 
     @action(
         detail=True,

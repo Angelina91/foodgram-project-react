@@ -5,10 +5,6 @@ from django.db import models
 
 from .validators import validate_slug
 
-# from django_measurement.models import MeasurementField
-# from measurement.measures import Volume
-# from measurement.measures import Weight
-
 
 User = get_user_model()
 
@@ -37,7 +33,6 @@ class Recipe(models.Model):
         verbose_name='Описание',
         help_text='Описание',
     )
-    # slug = models.SlugField(max_length=50)
     ingredients = models.ManyToManyField(
         'Ingredient',
         through='IngredientDetale',
@@ -92,9 +87,13 @@ class Tag(models.Model):
     slug = models.SlugField(
         max_length=200,
         unique=True,
-        validators=[validate_slug],
         verbose_name='slug',
         help_text='slug',
+        error_messages={
+            'name': {
+                'max_length' : ("Слишком длинный слаг"),
+            },
+        }
     )
 
     class Meta:
@@ -123,6 +122,12 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'measurement_unit'],
+                name='unique_measurement_unit',
+            )
+        ]
 
     def __str__(self):
         return self.name
@@ -130,6 +135,7 @@ class Ingredient(models.Model):
 
 class IngredientDetale(models.Model):
     """ Промкжуточная модель для Ингредиентов и Рецептов"""
+
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
@@ -144,15 +150,14 @@ class IngredientDetale(models.Model):
         verbose_name='Рецепт',
         help_text='Рецепт',
     )
-    # amount = models.PositiveIntegerField(
-    #     default='1',
-    #     verbose_name='Количество ингредиентов',
-    #     help_text='Количество ингредиентов',
-    # )
     amount = models.DecimalField(
         max_digits=3,
         decimal_places=2,
-        validators=[MinValueValidator(1)],
+        validators=[
+            MinValueValidator(
+                limit_value=1,
+                message='Маловато будет',
+            )],
         verbose_name='Количество ингредиентов',
         help_text='Количество ингредиентов',
     )
@@ -168,7 +173,7 @@ class IngredientDetale(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.ingredient} {self.recipe}'
+        return self.amount
 
 
 class FavoriteAuthor(models.Model):

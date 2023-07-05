@@ -34,4 +34,12 @@ class RecipeAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.register(Tag)
+@admin.register(Tag)
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'name',
+    )
+    prepopulated_fields = {
+        'slug': ('name',)
+    }
