@@ -35,7 +35,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
 
 @admin.register(Tag)
-class IngredientAdmin(admin.ModelAdmin):
+class TagAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         'name',
