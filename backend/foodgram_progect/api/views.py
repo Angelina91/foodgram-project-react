@@ -108,11 +108,17 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     pagination_class = CustomPagination
 
 
-class RecipeCreateListRetrieveViewSet(mixins.CreateModelMixin,
-                                      mixins.ListModelMixin,
-                                      mixins.RetrieveModelMixin,
-                                      mixins.DestroyModelMixin,
-                                      viewsets.GenericViewSet):
+class CreateListRetrieveDestroyViewSet(mixins.CreateModelMixin,
+                                       mixins.ListModelMixin,
+                                       mixins.RetrieveModelMixin,
+                                       mixins.DestroyModelMixin,
+                                       viewsets.GenericViewSet):
+    """ Сериалайзер для ограничения методов """
+
+    http_method_names = ['get', 'post', 'patch', 'delete']
+
+
+class RecipeViewSet(CreateListRetrieveDestroyViewSet):
     """ Рецепт, выгрузка файла со списком """
 
     queryset = Recipe.objects.all()
@@ -121,7 +127,6 @@ class RecipeCreateListRetrieveViewSet(mixins.CreateModelMixin,
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     pagination_class = CustomPagination
-    http_method_names = ['get', 'post', 'patch', 'delete']
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
