@@ -1,36 +1,42 @@
 version: '3.8'
-name: foodgram_project
+name: dev_foodgram
 services:
 
   db:
     image: postgres:13.0-alpine
+    restart: always
     volumes:
-      - /var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env # уточнить правильность указания директории
   web:
-    image: angelina91/foodgram_progect:latest
+    build:
+      context: ../backend/foodgram_progect
+      dockerfile: Dockerfile
     restart: always
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
       - ../backend/foodgram_progect:/app/foodgram_progect
-    depends_on:
-      - db
     env_file:
       - ./.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
   frontend:
   # тут потом надо прописат адрес образа - вебинар - 01:08    
     build:
       context: ../frontend
-      dockerfile: ../backend/foodgram_progect/foodgram_progect/Dockerfile
+      dockerfile: ../frontend/Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
     # ставить ли зависимость от web?
     depends_on:
       - web
   nginx:
-    image: angelina91/nginx:1.19.3
+    image: nginx:1.21.3-alpine
     restart: always # надо проверить, как с этим работает
     ports:
       - "80:80"
@@ -42,19 +48,10 @@ services:
       - media_value:/var/html/media/
     depends_on:
       - web
-  
-  # уточнить - пригодится ли что-то из проекта yamdb_final для nginx
-  # nginx:
-  #   image: nginx:1.21.3-alpine
-  #   ports:
-  #     - "80:80"
-
-  #   volumes:
-  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-  #     - static_value:/var/html/static/
-  #     - media_value:/var/html/media/
+      - frontend
 
 volumes:
 # надо ли еще прописать образ на базу данных?
   static_value:
   media_value:
+  postgres_data:

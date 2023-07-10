@@ -2,12 +2,11 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
+from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
+                          IngredientDetale, Recipe, ShoppingCart, Tag)
 from rest_framework import serializers
 from rest_framework.fields import (IntegerField, ReadOnlyField,
                                    SerializerMethodField)
-
-from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
-                          IngredientDetale, Recipe, ShoppingCart, Tag)
 from users.models import User
 
 
