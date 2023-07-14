@@ -3,7 +3,7 @@ name: dev_foodgram
 services:
 
   db:
-    image: postgres:13.0-alpine
+    image: postgres:13-alpine
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
@@ -24,7 +24,6 @@ services:
       - "8000:8000"
     depends_on:
       - db
-
   frontend:
   # тут потом надо прописат адрес образа - вебинар - 01:08    
     build:
