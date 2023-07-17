@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
 
 DEBUG = os.getenv('DEBUG', default='True')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', '*'), '*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     # Run python manage.py collectstatic!!!!!!!!!!!!!!!!
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
-    'posts.apps.PostsConfig',
+    'recipes.apps.RecipesConfig',
 
 ]
 

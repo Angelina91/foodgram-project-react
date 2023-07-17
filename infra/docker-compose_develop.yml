@@ -8,10 +8,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ./.env # уточнить правильность указания директории
-  web:
+      - ./.env
+  backend:
     build:
-      context: ../backend/foodgram_progect
+      context: ../backend
       dockerfile: Dockerfile
     restart: always
     volumes:
@@ -24,19 +24,18 @@ services:
       - "8000:8000"
     depends_on:
       - db
-  frontend:
-  # тут потом надо прописат адрес образа - вебинар - 01:08    
+
+  frontend:  
     build:
       context: ../frontend
       dockerfile: ../frontend/Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
-    # ставить ли зависимость от web?
     depends_on:
-      - web
+      - backend
   nginx:
     image: nginx:1.21.3-alpine
-    restart: always # надо проверить, как с этим работает
+    restart: always
     ports:
       - "80:80"
     volumes:
@@ -46,11 +45,10 @@ services:
       - static_value:/var/html/static/
       - media_value:/var/html/media/
     depends_on:
-      - web
+      - backend
       - frontend
 
 volumes:
-# надо ли еще прописать образ на базу данных?
   static_value:
   media_value:
   postgres_data:

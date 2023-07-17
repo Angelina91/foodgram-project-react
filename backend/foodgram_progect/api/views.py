@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
+from recipes.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
                           IngredientDetale, Recipe, ShoppingCart, Tag)
 from rest_framework import exceptions, filters, mixins, viewsets
 from rest_framework.decorators import action
@@ -27,13 +27,13 @@ class CustomUserViewSet(UserViewSet):
     """ Пользователь с настройками подписки """
 
     pagination_class = CustomPagination
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = []
 
     @action(
         detail=False,
         methods=['GET'],
         serializer_class=SubscriptionsSerializer,
-        permission_classes=(IsAuthenticated,)
+        # permission_classes=(IsAuthenticated,)
     )
     def subscriptions(self, request):
         user = self.request.user
@@ -95,6 +95,7 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (AllowAny,)
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
+    pagination_class = None
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
@@ -104,7 +105,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
     filterset_class = IngredientFilter
-    pagination_class = CustomPagination
+    pagination_class = None
 
 
 class CreateListRetrieveDestroyViewSet(mixins.CreateModelMixin,

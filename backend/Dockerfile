@@ -1,0 +1,13 @@
+FROM python:3.7-slim
+
+LABEL author='Angelina91' prodject='foodgram_progect'
+
+WORKDIR /app
+COPY requirements.txt ./
+
+RUN pip install -U pip &&\
+    pip install -r requirements.txt --no-cache-dir
+COPY . .
+
+RUN chmod +x run_app.sh
+CMD ["bash", "/app/run_app.sh"]

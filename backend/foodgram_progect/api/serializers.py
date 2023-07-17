@@ -1,10 +1,11 @@
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from posts.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
-                          IngredientDetale, Recipe, ShoppingCart, Tag)
-from rest_framework import serializers
+from recipes.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
+                            IngredientDetale, Recipe, ShoppingCart, Tag)
+from rest_framework import exceptions, serializers
 from rest_framework.fields import (IntegerField, ReadOnlyField,
                                    SerializerMethodField)
 from users.models import User
@@ -237,17 +238,28 @@ class PostRecipeSerializer(serializers.ModelSerializer):
         )
 
     @transaction.atomic
-    def update(self, instanse, validated_data):
-        instanse.tags.clear()
-        instanse.ingredients.clear()
-        tags = validated_data.pop('tags')
-        ingredients = validated_data.pop('ingredients')
-        instanse = super().update(instanse, validated_data)
-        return self.add_tags_ingredients(
-            tags,
-            ingredients,
-            instanse,
-        )
+    # def update(self, instanse, validated_data):
+    #     instanse.tags.clear()
+    #     instanse.ingredients.clear()
+    #     tags = validated_data.pop('tags')
+    #     ingredients = validated_data.pop('ingredients')
+    #     instanse = super().update(instanse, validated_data)
+    #     return self.add_tags_ingredients(
+    #         tags,
+    #         ingredients,
+    #         instanse,
+    #     )
+
+    def update(self, instance, validated_data):
+        if 'ingredients' in validated_data:
+            ingredients = validated_data.pop('ingredients')
+            instance.ingredients.clear()
+            self.create_ingredients(ingredients, instance)
+        if 'tags' in validated_data:
+            instance.tags.set(
+                validated_data.pop('tags'))
+        return super().update(
+            instance, validated_data)
 
 
 class FavoriteRecipeSerializer(serializers.ModelSerializer):

@@ -9820,14 +9820,6 @@
   },
   {
     "model": "recipes.ingredient",
-    "pk": 1225,
-    "fields": {
-      "name": "пекарский порошок",
-      "measurement_unit": "ч. л."
-    }
-  },
-  {
-    "model": "recipes.ingredient",
     "pk": 1226,
     "fields": {
       "name": "пекорино",
@@ -13856,14 +13848,6 @@
     "fields": {
       "name": "ставрида",
       "measurement_unit": "г"
-    }
-  },
-  {
-    "model": "recipes.ingredient",
-    "pk": 1730,
-    "fields": {
-      "name": "стейк семги",
-      "measurement_unit": "шт."
     }
   },
   {
