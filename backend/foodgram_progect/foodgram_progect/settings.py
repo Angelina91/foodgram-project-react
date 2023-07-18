@@ -144,11 +144,11 @@ DJOSER = {
         'user': 'api.serializers.CreateUserSerializer',
         'current_user': 'api.serializers.CreateUserSerializer',
     },
-    # 'PERMISSIONS': {
-    #     'user': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
-    #     'user_list': ('rest_framework.permissions.AllowAny',),
-    #     'token_create': ['rest_framework.permissions.AllowAny'],
-    # },
+    'PERMISSIONS': {
+        'user': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
+        'user_list': ('rest_framework.permissions.AllowAny',),
+        'token_create': ['rest_framework.permissions.AllowAny'],
+    },
     'HIDE_USERS': False,
 }
 
