@@ -6,11 +6,10 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from recipes.models import (FavoriteAuthor, FavoriteRecipe, Ingredient,
-                          IngredientDetale, Recipe, ShoppingCart, Tag)
+                            IngredientDetale, Recipe, ShoppingCart, Tag)
 from rest_framework import exceptions, filters, mixins, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import (AllowAny, IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from users.models import User
@@ -33,7 +32,7 @@ class CustomUserViewSet(UserViewSet):
         detail=False,
         methods=['GET'],
         serializer_class=SubscriptionsSerializer,
-        # permission_classes=(IsAuthenticated,)
+        permission_classes=(IsAuthenticated,)
     )
     def subscriptions(self, request):
         user = self.request.user

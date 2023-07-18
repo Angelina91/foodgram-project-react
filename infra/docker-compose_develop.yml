@@ -15,8 +15,8 @@ services:
       dockerfile: Dockerfile
     restart: always
     volumes:
-      - static_value:/app/static/
-      - media_value:/app/media/
+      - static_value:/app/foodgram_progect/static/
+      - media_value:/app/foodgram_progect/media/
       - ../backend/foodgram_progect:/app/foodgram_progect
     env_file:
       - ./.env
