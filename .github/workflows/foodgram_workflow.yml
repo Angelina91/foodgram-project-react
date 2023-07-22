@@ -24,6 +24,19 @@ jobs:
       - name: Test with flake8
         run: |
           python -m flake8
+
+  build:
+    name: Copy docker-compose
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        source: "infra/docker-compose.yaml"
+        target: /app/foodgram_progect/
  
   build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
