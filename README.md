@@ -149,34 +149,10 @@ SSH: git clone git@github.com:Angelina91/foodgram-project-react.git
 docker-compose up -d --build
 ```
 
-#### :feet: Выполнить миграции
-
-```bash
-docker-compose exec web python manage.py migrate
-```
-
-#### :bowtie: Создать суперпользователя
-
-```bash
-docker-compose exec web python manage.py createsuperuser
-```
-
-#### :crystal_ball: Собрать статику
-
-```bash
-docker-compose exec web python manage.py collectstatic --no-input
-```
-
-#### :love_letter: Заполнить базу данных
-
-```bash
-docker-compose exec web python manage.py loaddata ../infra/fixtures.json
-```
-
 ## Путь до удаленного сервера
 
 ```bash
-ssh angelina91@84.201.158.17
+ssh angelina91@158.160.116.7
 ```
 ## Автор
 
