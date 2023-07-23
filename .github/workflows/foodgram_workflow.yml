@@ -58,8 +58,8 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
-        source: "./infra/docker-compose.yaml"
-        target: /home/angelina91/
+        source: "backend/docker-compose.yaml"
+        target: /home/angelina91/foodgram_progect
 
   deploy:
     runs-on: ubuntu-latest
