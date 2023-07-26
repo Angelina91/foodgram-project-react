@@ -53,6 +53,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: copy file via ssh password
+
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.HOST }}
@@ -60,6 +61,9 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         source: "backend/docker-compose.yaml"
         target: /home/angelina91/foodgram_progect
+        # run: |
+        #   pwd
+        #   ls -lah
 
   deploy:
     runs-on: ubuntu-latest
