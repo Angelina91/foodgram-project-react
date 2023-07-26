@@ -66,6 +66,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         source: "backend/docker-compose.yaml"
         target: /home/angelina91/foodgram_progect
+        tar_dereference: true
+        rm: true
 
   deploy:
     runs-on: ubuntu-latest
