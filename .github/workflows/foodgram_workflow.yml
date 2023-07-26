@@ -52,6 +52,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+        
+    - name: find current directory
+      run: |
+        pwd
+        ls -lah
 
     - name: copy file via ssh password
       uses: appleboy/scp-action@v0.1.4
@@ -61,11 +66,6 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         source: "backend/docker-compose.yaml"
         target: /home/angelina91/foodgram_progect
-        
-    - name: find current directory
-      run: |
-        pwd
-        ls -lah
 
   deploy:
     runs-on: ubuntu-latest
