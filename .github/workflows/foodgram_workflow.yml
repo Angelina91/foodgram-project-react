@@ -65,7 +65,7 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         source: "backend/docker-compose.yaml"
-        target: /home/angelina91/foodgram_progect
+        target: /home/angelina91/foodgram_progect/
         tar_dereference: true
         rm: true
 
