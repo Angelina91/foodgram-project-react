@@ -58,13 +58,13 @@ jobs:
           ls -lah
 
       - name: Copy infra to server
-        uses: garygrossgarten/github-action-scp@release
+        uses: appleboy/scp-action@v0.1.4
         with:
-            local: infra/
-            remote: /${{ secrets.USERNAME }}/foodgram_progect/
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            privateKey: ${{ secrets.PRIVATE_KEY }} 
+          local: infra/
+          remote: /${{ secrets.USERNAME }}/foodgram_progect/
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
 
   # build_compose_on_host:
   #   name: Copy docker compose
