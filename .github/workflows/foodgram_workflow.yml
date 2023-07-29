@@ -93,7 +93,7 @@ jobs:
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             sudo docker pull angelina91/foodgram_progect:latest
-            sudo compose up -d
+            sudo docker compose up -d
 
   send_message:
     name: happyend
