@@ -70,7 +70,7 @@ jobs:
   #         ls -lah
 
         - name: Copy infra to server
-          uses: Angelina91/github-action-scp@releas
+          uses: garygrossgarten/github-action-scp@release
           with:
             local: infra/
             remote: /${{ secrets.USER }}/foodgram_progect/
