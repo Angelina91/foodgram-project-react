@@ -48,7 +48,7 @@ jobs:
           context: ./backend/
           push: true
           tags: angelina91/foodgram_backend:latest
-          # file: backend/Dockerfile
+          file: backend/Dockerfile
 
       - name: Push frontend image to Docker Hub
         uses: docker/build-push-action@v2
@@ -56,27 +56,27 @@ jobs:
           context: frontend/
           push: true
           tags: angelina91/foodgram_frontend:latest
-          # file: frontend/Dockerfile
+          file: frontend/Dockerfile
 
-  build_compose_on_host:
-      name: Copy docker compose
-      needs: build_and_push_to_docker_hub
-      runs-on: ubuntu-latest
-      steps:
-  #     - uses: actions/checkout@v3
-  #     - name: find current directory
-  #       run: |
-  #         pwd
-  #         ls -lah
+  # build_compose_on_host:
+  #     name: Copy docker compose
+  #     needs: build_and_push_to_docker_hub
+  #     runs-on: ubuntu-latest
+  #     steps:
+  # #     - uses: actions/checkout@v3
+  # #     - name: find current directory
+  # #       run: |
+  # #         pwd
+  # #         ls -lah
 
-        - name: Copy infra to server
-          uses: Angelina91/github-action-scp@release
-          with:
-            local: infra/
-            remote: /${{ secrets.USER }}/foodgram_progect/
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USER }}
-            key: ${{ secrets.SSH_KEY }}
+  #       - name: Copy infra to server
+  #         uses: Angelina91/github-action-scp@release
+  #         with:
+  #           local: infra/
+  #           remote: /${{ secrets.USER }}/foodgram_progect/
+  #           host: ${{ secrets.HOST }}
+  #           username: ${{ secrets.USER }}
+  #           key: ${{ secrets.SSH_KEY }}
 
   # build_compose_on_host:
   #   name: Copy docker compose
@@ -103,16 +103,9 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    # needs: build_docker_compose_on_host
     needs: build_and_push_to_docker_hub
     if: github.ref == 'refs/heads/master'
     steps:
-      # - name: Login to Docker
-      #   uses: docker/login-action@v1 
-      #   with:
-      #     username: ${{ secrets.DOCKER_USERNAME }} 
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
-
       - name: executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
         with:
