@@ -1,5 +1,7 @@
 # Foodgram-project-react
+
 ## _«Продуктовый помощник»_
+
 
 [![Я|Практикум](https://img.shields.io/badge/-ЯндексПрактикум-464646?style=flat&logo=Yandex.Cloud&logoColor=56C0C0&color=008080)](https://practicum.yandex.ru/)
 
@@ -10,12 +12,14 @@
 ## Базовые модели проекта
 
 - Более подробно с базовыми моделями можно ознакомиться в спецификации API.
+
 > [redoc](http://84.201.158.17/redoc/)
 
 - краткая информация по проекту ниже
 - ✨Magic ✨
 
 ## Базовые модели проекта
+
 ### Рецепт
 
 > Рецепт должен описываться такими полями:
@@ -32,18 +36,22 @@
 
 ### Тэг
 > Тег должен описываться такими полями:
+
 - Название.
 - Цветовой HEX-код (например, #49B64E).
 - Slug.
+
 > Все поля обязательны для заполнения и уникальны.
 
 ### Ингредиенты
+
 > Данные об ингредиентах хранятся в нескольких связанных таблицах. В результате на стороне пользователя ингредиент должен описываться такими полями:
+
 - Название.
 - Количество.
 - Единицы измерения.
-> Все поля обязательны для заполнения.
 
+> Все поля обязательны для заполнения.
 
 ## Стек технологий
 
@@ -63,11 +71,13 @@ Foodgram-project очень лекго `установить` _(распаков
 `Поехали!`
 
 - ### Установка Docker (на платформе Ubuntu)
+
 Проект поставляется в четырех контейнерах Docker (db, frontend, backend, nginx).  
 Для запуска необходимо установить Docker и Docker Compose.  
 Подробнее об установке на других платформах можно узнать на [официальном сайте](https://docs.docker.com/engine/install/).
 
 Для начала необходимо скачать и выполнить официальный скрипт:
+
 ```bash
 apt install curl
 curl -fsSL https://get.docker.com -o get-docker.sh
@@ -75,11 +85,13 @@ sh get-docker.sh
 ```
 
 При необходимости удалить старые версии Docker:
+
 ```bash
 apt remove docker docker-engine docker.io containerd runc 
 ```
 
 Установить пакеты для работы через протокол https:
+
 ```bash
 apt update
 ```
@@ -94,35 +106,43 @@ apt install \
 ```
 
 Добавить ключ GPG для подтверждения подлинности в процессе установки:
+
 ```bash
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 ```
 
 Добавить репозиторий Docker в пакеты apt и обновить индекс пакетов:
+
 ```bash
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" 
+
 ```
+
 ```bash
 apt update
 ```
 
 Установить Docker(CE) и Docker Compose:
+
 ```bash
 apt install docker-ce docker compose -y
 ```
 
 Проверить что  Docker работает можно командой:
+
 ```bash
 systemctl status docker
 ```
 
 ---
+
 - ### База данных и переменные окружения
 
 Проект использует базу данных PostgreSQL.  
 Для подключения и выполненя запросов к базе данных необходимо создать и заполнить файл ".env" с переменными окружения в папке "./infra/".
 
 Шаблон для заполнения файла ".env":
+
 ```python
 DEBUG=False
 DB_ENGINE=django.db.backends.postgresql
@@ -137,9 +157,11 @@ ALLOWED_HOSTS=['84.201.158.17', 'localhost', '127.0.0.1', 'backend']
 ```
 
 ---
+
 - ### START-PROJECT
 
 Перед запуском необходимо склонировать проект:
+
 ```bash
 SSH: git clone git@github.com:Angelina91/foodgram-project-react.git
 ```
@@ -157,6 +179,7 @@ docker compose up -d --build
 ```bash
 ssh angelina91@158.160.116.7
 ```
+
 ## Автор
 
 # [![Angelina91](https://img.shields.io/badge/-Angelina91-464646?style=flat&logo=Angelina&logoColor=56C0C0&color=000)](https://github.com/Angelina91)
