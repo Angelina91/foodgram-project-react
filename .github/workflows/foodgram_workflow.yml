@@ -58,25 +58,25 @@ jobs:
           tags: angelina91/foodgram_frontend:latest
           # file: frontend/Dockerfile
 
-  # build_compose_on_host:
-  #     name: Copy docker compose
-  #     needs: build_and_push_to_docker_hub
-  #     runs-on: ubuntu-latest
-  #     steps:
+  build_compose_on_host:
+      name: Copy docker compose
+      needs: build_and_push_to_docker_hub
+      runs-on: ubuntu-latest
+      steps:
   #     - uses: actions/checkout@v3
   #     - name: find current directory
   #       run: |
   #         pwd
   #         ls -lah
 
-  #     - name: Copy infra to server
-  #       uses: appleboy/scp-action@v0.1.4
-  #       with:
-  #         local: infra/
-  #         remote: /${{ secrets.USERNAME }}/foodgram_progect/
-  #         host: ${{ secrets.HOST }}
-  #         username: ${{ secrets.USER }}
-  #         key: ${{ secrets.SSH_KEY }}
+        - name: Copy infra to server
+          uses: garygrossgarten/github-action-scp@releas
+          with:
+            local: infra/
+            remote: /${{ secrets.USER }}/foodgram_progect/
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USER }}
+            key: ${{ secrets.SSH_KEY }}
 
   # build_compose_on_host:
   #   name: Copy docker compose
