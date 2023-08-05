@@ -38,7 +38,7 @@ services:
       - "80:80"
     volumes:
       - type: bind
-        source: ./nginx.conf
+        source: ./nginx/default.conf
         target: /etc/nginx/conf.d/defauit.conf
 
       # - ./nginx.conf:/etc/nginx/conf.d/default.conf
