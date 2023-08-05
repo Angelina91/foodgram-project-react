@@ -50,7 +50,6 @@ services:
       - backend
       - frontend
 
-
 volumes:
   static_value:
   media_value:

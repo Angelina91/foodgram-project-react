@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'djoser',
     'django_filters',
     'colorfield',
-    # Run python manage.py collectstatic!!!!!!!!!!!!!!!!
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
     'recipes.apps.RecipesConfig',
