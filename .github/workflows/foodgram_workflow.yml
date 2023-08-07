@@ -58,49 +58,6 @@ jobs:
           tags: angelina91/foodgram_frontend:latest
           file: frontend/Dockerfile
 
-  # build_compose_on_host:
-  #     name: Copy docker compose
-  #     needs: build_and_push_to_docker_hub
-  #     runs-on: ubuntu-latest
-  #     steps:
-  # #     - uses: actions/checkout@v3
-  # #     - name: find current directory
-  # #       run: |
-  # #         pwd
-  # #         ls -lah
-
-  #       - name: Copy infra to server
-  #         uses: Angelina91/github-action-scp@release
-  #         with:
-  #           local: infra/
-  #           remote: /${{ secrets.USER }}/foodgram_progect/
-  #           host: ${{ secrets.HOST }}
-  #           username: ${{ secrets.USER }}
-  #           key: ${{ secrets.SSH_KEY }}
-
-  # build_compose_on_host:
-  #   name: Copy docker compose
-  #   needs: build_and_push_to_docker_hub
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v3
-        
-  #   - name: find current directory
-  #     run: |
-  #       pwd
-  #       ls -lah
-
-  #   - name: copy file via ssh password
-  #     uses: appleboy/scp-action@v0.1.4
-  #     with:
-  #       host: ${{ secrets.HOST }}
-  #       username: ${{ secrets.USER }}
-  #       key: ${{ secrets.SSH_KEY }}
-  #       source: "backend/docker compose.yaml"
-  #       target: /home/angelina91/foodgram_progect/
-  #       tar_dereference: true
-  #       rm: true
-
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push_to_docker_hub
