@@ -16,7 +16,7 @@ services:
       - static_value:/app/foodgram_progect/static/
       - media_value:/app/foodgram_progect/media/
       # - ../backend/foodgram_progect:/app/foodgram_progect
-      - ../backend/:/app/foodgram_progect
+      - ../backend/:/app/foodgram_progect/
     env_file:
       - ./.env
 
