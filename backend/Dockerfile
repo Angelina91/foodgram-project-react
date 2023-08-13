@@ -10,4 +10,5 @@ RUN pip install -U pip &&\
 COPY . .
 
 RUN chmod +x run_app.sh
-CMD ["bash", "/app/run_app.sh"]
+# CMD ["bash", "/app/run_app.sh"]
+ENTRYPOINT ["/app/run_app.sh"]
