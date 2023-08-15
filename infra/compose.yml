@@ -47,6 +47,7 @@ services:
       - ../docs/:/usr/share/nginx/html/api/docs/
       - static_value:/var/html/static/
       - media_value:/var/html/media/
+
     depends_on:
       - backend
       - frontend
