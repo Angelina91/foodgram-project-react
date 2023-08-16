@@ -1,5 +1,6 @@
 FROM python:3.7-slim
-RUN apt update && apt install -y libpq-dev gcc
+# RUN apt update && apt install -y libpq-dev gcc
+RUN apt update && apt install -y libpq-dev gcc netcat-traditional
 
 LABEL author='Angelina91' prodject='foodgram_progect'
 
