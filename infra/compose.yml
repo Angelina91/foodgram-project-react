@@ -10,6 +10,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
+
   backend:
     image: angelina91/foodgram_backend:latest
     restart: always
