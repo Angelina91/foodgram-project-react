@@ -31,7 +31,6 @@ services:
     depends_on:
       - backend
 
-
   nginx:
     image: nginx:1.24.0-alpine
     restart: always
