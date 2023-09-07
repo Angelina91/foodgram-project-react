@@ -1,0 +1,11 @@
+DEBUG=False
+DB_ENGINE=django.db.backends.postgresql
+POSTGRES_DB=food_postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=1723
+POSTGRES_HOST_AUTH_METHOD=trust
+DB_HOST=db
+DB_PORT=5432
+SECRET_KEY='6yhnNHY^7ujm'
+CONTACT_EMAIL='linatintin@yandex.ru'
+ALLOWED_HOSTS=['84.201.158.17', 'localhost', '127.0.0.1', 'backend']
