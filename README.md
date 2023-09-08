@@ -177,7 +177,7 @@ docker compose up -d --build
 ## Путь до удаленного сервера
 
 ```bash
-ssh angelina91@158.160.116.7
+ssh foodgram@84.201.158.17
 ```
 
 ## Автор
