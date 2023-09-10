@@ -2,7 +2,6 @@
 
 ## _«Продуктовый помощник»_
 
-
 [![Я|Практикум](https://img.shields.io/badge/-ЯндексПрактикум-464646?style=flat&logo=Yandex.Cloud&logoColor=56C0C0&color=008080)](https://practicum.yandex.ru/)
 
 ![status workflow](https://github.com/Angelina91/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
