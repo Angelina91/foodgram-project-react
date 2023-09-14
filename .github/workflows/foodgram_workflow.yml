@@ -71,10 +71,10 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
 
           script: |
-            sudo compose stop
-            sudo compose rm -f backend frontend
+            sudo docker-compose stop
+            sudo docker-compose rm -f backend frontend
             sudo docker image rm angelina91/foodgram_backend angelina91/foodgram_frontend
-            sudo compose pull backend frontend
+            sudo docker-compose pull backend frontend
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.POSTGRES_DB }} >> .env
@@ -82,7 +82,7 @@ jobs:
             echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-            sudo compose up -d
+            sudo docker-compose up -d
 
   send_message:
     name: happyend
