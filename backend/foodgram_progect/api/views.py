@@ -202,12 +202,12 @@ class RecipeViewSet(CreateListRetrieveDestroyViewSet):
         ).annotate(
             amount=Sum('amount')
         )
-        shop_list_text = 'Список покупок'
+        shop_list_text = 'Список покупок:'
         for item in shop_list:
             ingredient = Ingredient.objects.get(pk=item['ingredient'])
             amount = item['amount']
             shop_list_text += (
-                f'{ingredient.name}, {amount} '
+                f' {ingredient.name}, {amount} '
                 f'{ingredient.measurement_unit}\n'
             )
 
