@@ -207,12 +207,12 @@ class RecipeViewSet(CreateListRetrieveDestroyViewSet):
             ingredient = Ingredient.objects.get(pk=item['ingredient'])
             amount = item['amount']
             shop_list_text += (
-                f'Наименование: {ingredient.name}, количество {amount} '
+                f'{ingredient.name}, {amount} '
                 f'{ingredient.measurement_unit}\n'
             )
 
-        response = HttpResponse(shop_list_text, content_type='application/pdf')
-        response['Content-disposition'] = (
-            'attachment; filename=shopping-list.pdf'
+        response = HttpResponse(shop_list_text, content_type='text/plain')
+        response['Content-Disposition'] = (
+            'attachment; filename=shopping-list.txt'
         )
         return response
